@@ -5,25 +5,38 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     heading: {
       fontSize: theme.typography.pxToRem(15),
+      fontFamily: "Della Respira, sans-serif",
       flexBasis: "33.33%",
       flexShrink: 0,
     },
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(15),
+      fontFamily: "Della Respira, sans-serif",
       color: theme.palette.text.secondary,
+    },
+    desc: {
+      fontFamily: "Della Respira, sans-serif",
+    },
+    accordion: {
+      background: "rgba(125,122,115,0.3)",
+      borderRadius: "0.3rem",
+      padding: "10px",
+      margin: "10px 0",
+      color: "white",
     },
   })
 );
 
 function Fellow(props: any) {
   const [expanded, setExpanded] = useState<string | false>(false);
-  const [moviesTitles, setMoviesTitles]: any = useState([]);
+  const [moviesTitles, setMoviesTitles] = useState<string[]>([]);
 
   const { fellow, idx } = props;
   const classes = useStyles();
@@ -31,11 +44,10 @@ function Fellow(props: any) {
   useEffect(() => {
     const getMovie = async () => {
       try {
-        let movies: Array<string> = [];
+        let movies: string[] = [];
         fellow.films.map(async (movieUri: string) => {
           const response = await axios.get(movieUri);
           movies.push(response.data.title);
-          console.log("request");
         });
         setMoviesTitles(movies);
       } catch (err) {
@@ -54,6 +66,7 @@ function Fellow(props: any) {
 
   return (
     <Accordion
+      className={classes.accordion}
       expanded={expanded === `panel${idx}`}
       onChange={handleChange(`panel${idx}`)}
     >
@@ -64,15 +77,19 @@ function Fellow(props: any) {
       >
         <Typography className={classes.heading}>{fellow.name}</Typography>
         <Typography className={classes.secondaryHeading}>
-          {fellow.birth_year}, {fellow.gender}
+          Birth Year: {fellow.birth_year}, Gender: {fellow.gender}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>
-          Height: {fellow.height}, Mass: {fellow.mass},
-          {moviesTitles.map((movie: string) => (
-            <span>{movie}</span>
-          ))}
+        <Typography className={classes.desc}>
+          Height: {fellow.height}, Mass: {fellow.mass}, Movies:{" "}
+          {moviesTitles.map((movie: string) => {
+            return movie === moviesTitles[moviesTitles.length - 1] ? (
+              <span key={uuidv4()}>{movie}</span>
+            ) : (
+              <span key={uuidv4()}>{movie}, </span>
+            );
+          })}
         </Typography>
       </AccordionDetails>
     </Accordion>

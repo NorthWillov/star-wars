@@ -1,9 +1,11 @@
 import "./App.css";
 import List from "./List";
+import logo from "./starwars.png";
 
 function App() {
   return (
     <div className="App">
+      <img className="logo" src={logo} alt="logo" />
       <List />
     </div>
   );
