@@ -35,6 +35,7 @@ const List: FC = () => {
   const [page, setPage] = useState<number>(1);
   const [fellows, setFellows]: Array<any> = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isBottom, setIsBottom] = useState<boolean>(false);
 
   const classes = useStyles();
 
@@ -45,6 +46,7 @@ const List: FC = () => {
         const response = await axios.get(
           `https://swapi.dev/api/people/?page=${page}`
         );
+        setIsBottom(false);
         setFellows([...fellows, ...response.data.results]);
         setIsLoading(false);
       } catch (err) {
@@ -54,7 +56,30 @@ const List: FC = () => {
     getData();
   }, [page]);
 
-  const handleLoadMoreClick = () => {
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isBottom && page !== 9) {
+      handleLoadMore();
+    }
+  }, [isBottom]);
+
+  const handleScroll = () => {
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+    const scrollHeight =
+      (document.documentElement && document.documentElement.scrollHeight) ||
+      document.body.scrollHeight;
+    if (scrollTop + window.innerHeight + 50 >= scrollHeight) {
+      setIsBottom(true);
+    }
+  };
+
+  const handleLoadMore = () => {
     setPage(page + 1);
   };
 
@@ -63,19 +88,7 @@ const List: FC = () => {
       {fellows.map((fellow: IFellow, idx: number) => (
         <Fellow key={fellow.name} fellow={fellow} idx={idx} />
       ))}
-      {!isLoading ? (
-        <Button
-          className={classes.btn}
-          onClick={handleLoadMoreClick}
-          variant="contained"
-          size="large"
-          disabled={page === 9}
-        >
-          Load More
-        </Button>
-      ) : (
-        <CircularProgress color="secondary" />
-      )}
+      {isLoading && <CircularProgress color="secondary" />}
     </div>
   );
 };
