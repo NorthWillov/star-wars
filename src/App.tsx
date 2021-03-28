@@ -1,5 +1,5 @@
 import "./App.css";
-import List from "./List";
+import List from "./components/List";
 import logo from "./starwars.png";
 
 function App() {

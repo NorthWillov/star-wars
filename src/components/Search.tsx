@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   makeStyles,
   Theme,
   createStyles,
   fade,
 } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import axios from "axios";
 import InputBase from "@material-ui/core/InputBase";
 import Fellow from "./Fellow";
 import SearchIcon from "@material-ui/icons/Search";
 import Divider from "@material-ui/core/Divider";
+import { debounce } from "../debounce";
 
 interface IFellow {
   name: string;
@@ -55,43 +57,42 @@ const useStyles = makeStyles((theme: Theme) =>
     divider: {
       marginTop: "30px",
     },
+    noresults: {
+      fontSize: "25px",
+      padding: "20px 0",
+    },
   })
 );
 
 const Search = (props: any) => {
   const [inputVal, setInputVal] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fellows, setFellows]: Array<any> = useState([]);
   const classes = useStyles();
 
-  const debounce = (func: any, delay = 1000) => {
-    let timeoutId: any;
-    return (...args: any[]) => {
-      if (timeoutId) {
-        clearInterval(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        func.apply(null, args);
-      }, delay);
-    };
-  };
-
-  const getData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(
-        `https://swapi.dev/api/people/?search=${inputVal}`
-      );
-      setFellows(response.data.results);
-      setIsLoading(false);
-    } catch (err) {
-      throw new Error(err);
+  useEffect(() => {
+    if (inputVal.length > 1) {
+      const getData = async () => {
+        setIsLoading(true);
+        try {
+          const response = await axios.get(
+            `https://swapi.dev/api/people/?search=${inputVal}`
+          );
+          setFellows(response.data.results);
+          console.log("Debounced");
+          setIsLoading(false);
+        } catch (err) {
+          throw new Error(err);
+        }
+      };
+      getData();
+    } else if (inputVal.length <= 1) {
+      setFellows([]);
     }
-  };
+  }, [inputVal]);
 
   const handleChange = (e: any) => {
     setInputVal(e.target.value);
-    getData();
   };
 
   return (
@@ -107,15 +108,18 @@ const Search = (props: any) => {
             root: classes.inputRoot,
             input: classes.inputInput,
           }}
-          value={inputVal}
-          onChange={handleChange}
+          onChange={debounce(handleChange, 500)}
           inputProps={{ "aria-label": "search" }}
         />
       </div>
-      <Divider className={classes.divider} />
       {fellows.map((fellow: IFellow, idx: number) => (
-        <Fellow key={fellow.name} fellow={fellow} idx={idx} />
+        <Fellow border={"blue"} key={fellow.name} fellow={fellow} idx={idx} />
       ))}
+      {inputVal.length > 1 && fellows.length === 0 && !isLoading ? (
+        <div className={classes.noresults}>No Results</div>
+      ) : null}
+      <Divider className={classes.divider} />
+      {isLoading && <CircularProgress color="primary" />}
     </>
   );
 };

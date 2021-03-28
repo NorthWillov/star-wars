@@ -38,7 +38,7 @@ function Fellow(props: any) {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [moviesTitles, setMoviesTitles] = useState<string[]>([]);
 
-  const { fellow, idx } = props;
+  const { fellow, idx, border } = props;
   const classes = useStyles();
 
   useEffect(() => {
@@ -66,6 +66,7 @@ function Fellow(props: any) {
 
   return (
     <Accordion
+      style={border === "blue" ? { border: "1px solid #0190de" } : {}}
       className={classes.accordion}
       expanded={expanded === `panel${idx}`}
       onChange={handleChange(`panel${idx}`)}
