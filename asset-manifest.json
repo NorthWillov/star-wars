@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/virtuslab/static/css/main.72117a07.chunk.css",
+    "main.js": "/virtuslab/static/js/main.ba8640e7.chunk.js",
+    "main.js.map": "/virtuslab/static/js/main.ba8640e7.chunk.js.map",
+    "runtime-main.js": "/virtuslab/static/js/runtime-main.43ff793a.js",
+    "runtime-main.js.map": "/virtuslab/static/js/runtime-main.43ff793a.js.map",
+    "static/js/2.75219360.chunk.js": "/virtuslab/static/js/2.75219360.chunk.js",
+    "static/js/2.75219360.chunk.js.map": "/virtuslab/static/js/2.75219360.chunk.js.map",
+    "static/js/3.c6472525.chunk.js": "/virtuslab/static/js/3.c6472525.chunk.js",
+    "static/js/3.c6472525.chunk.js.map": "/virtuslab/static/js/3.c6472525.chunk.js.map",
+    "index.html": "/virtuslab/index.html",
+    "static/css/main.72117a07.chunk.css.map": "/virtuslab/static/css/main.72117a07.chunk.css.map",
+    "static/js/2.75219360.chunk.js.LICENSE.txt": "/virtuslab/static/js/2.75219360.chunk.js.LICENSE.txt",
+    "static/media/starwars.e1b844c6.png": "/virtuslab/static/media/starwars.e1b844c6.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.43ff793a.js",
+    "static/js/2.75219360.chunk.js",
+    "static/css/main.72117a07.chunk.css",
+    "static/js/main.ba8640e7.chunk.js"
+  ]
+}
